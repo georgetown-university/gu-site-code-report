@@ -36,24 +36,22 @@ function runReport($site) {
   if (!$xml) { return false; }
 
   $printedSiteName = false;
+  $context = stream_context_create(array('http' => array( 'timeout' => 1200, )));
 
   foreach ($xml->url as $url) {
-    $html = file_get_html($url->loc);
+    $html = file_get_html($url->loc, false, $context);
 
     if ($html) {
-      $scripts = findCode($html, 'script', 'Scripts');
-      $iframes = findCode($html, 'iframe', 'iFrames');
-      $objects = findCode($html, 'object', 'Objects');
-      $forms   = findCode($html, 'form', 'Forms');
+      $code = findCode($html);
 
-      if ($scripts || $iframes || $objects || $forms) {
+      if ($code) {
         if (!$printedSiteName) {
           print '<h2>' . $site . '</h2>';
           $printedSiteName = true;
         }
 
         print '<h3><a href="' . $url->loc . '" target="_blank">' . $url->loc . '</a></h3>';
-        print $scripts . $iframes . $objects . $forms;
+        print '<table>' . $code . '</table>';
       }
     }
   }
@@ -66,19 +64,17 @@ function runReport($site) {
  *   Returns HTML of all instances of that code, if it exists.
  */
 
-function findCode($html, $tag, $title) {
-  $items = '';
-  $selector = 'main ' . $tag;
+function findCode($html) {
+  $code = '';
 
-  foreach ($html->find($selector) as $element) {
-    $items .= '<li>' . htmlspecialchars($element) . '</li>';
+  foreach ($html->find('main iframe, main script, main object, main form') as $element) {
+    $code .= '<tr>';
+    $code .= '<td>' . $element->tag . '</td>';
+    $code .= '<td><code>' . htmlspecialchars($element) . '</code></td>';
+    $code .= '</tr>';
   }
 
-  if ($items) {
-    return '<h4>' . $title . '</h4><ol>' . $items . '</ol>';
-  } else {
-    return '';
-  }
+  return $code;
 }
 
 

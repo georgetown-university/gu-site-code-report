@@ -277,10 +277,6 @@ studentliving
 summerconferences
 sustainability
 systemsmedicine
-testschool
-testunit
-testwhschool
-testwhunit
 thefrancisproject
 theology
 threatassessment

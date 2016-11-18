@@ -32,17 +32,33 @@ p {
   margin-bottom: 1rem;
 }
 
-ol {
-  margin: 1rem 0 2rem 4rem;
-}
-
-ol li {
+code {
   font-family: monospace;
   line-height: 1.5;
-  list-style-type: decimal;
-  margin-bottom: 1rem;
 }
 
 main {
   padding: 1rem;
+}
+
+table {
+  margin-bottom: 1rem;
+}
+
+tr:nth-child(2n) td {
+  background: #eee;
+}
+
+tr:first-child td {
+  border-top: 0;
+}
+
+td {
+  border: solid #000;
+  border-width: 1px 0 0 1px;
+  padding: 1rem;
+}
+
+td:first-child {
+  border-left: 0;
 }
